@@ -16,47 +16,36 @@ public class LoadScene : NetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
+       
         LoadSceneOnServer(null);
     }
 
+    public override void OnStartClient()
+    {
+       base.OnStartClient();
+       connectionId = InstanceFinder.ClientManager.Connection.ClientId;
+    }
     public void LoadSceneOnServer(NetworkConnection conn)
     {
+        int i = 0;
         SceneLoadData sld = new SceneLoadData("ExternalCode/Scenes/Game");
+        Debug.Log(i++);
         LoadOptions loadOptions = new LoadOptions
         {
             AllowStacking = true,
         };
+        Debug.Log(i++);
         sld.Options = loadOptions;
+        Debug.Log(i++);
         InstanceFinder.SceneManager.LoadConnectionScenes(conn, sld);
+        Debug.Log(i++);
         sceneReference = sld;
     }
 
-    [ContextMenu("Load Scene on client")]
-
-    [ServerRpc(RunLocally = true, RequireOwnership = false)]
-    public void SetRefServer()
+    [ServerRpc(RequireOwnership =false,RunLocally =true)]
+    public void LoadSceneUsingRPC(NetworkConnection conn)
     {
-        sceneLoadDataOnServer = sceneReference;
-        //base.SceneManager.LoadConnectionScenes(base.Owner, sceneLoadDataOnServer);
-        Debug.Log("1");
+        LoadSceneOnServer(conn);
     }
-
-    [ObserversRpc(ExcludeOwner = true, BufferLast = true)]
-    public void TargetLoadScene(NetworkConnection conn, SceneLoadData sld)
-    {
-        LoadSceneOnClient(sld,conn);
-        Debug.Log("2");
-    }
-
-
-    public void LoadSceneOnClient(SceneLoadData sld,NetworkConnection conn)
-    {
-        SceneLoadData scene = sceneReference;
-        base.SceneManager.LoadConnectionScenes(conn,scene);
-        Debug.Log("3");
-    }
-
-
-
 
 }
