@@ -1164,7 +1164,7 @@ namespace FirstGearGames.LobbyAndWorld.Lobbies
                          }
                     };
                     sld.Options = loadOptions;
-                    sld.Params = loadParams;
+                    sld.Params = loadParams; ////Sld
 
                     /* Only load scene for the server. This is to ensure that the server
                      * can load the scene fine, and once it does it will load for clients. */

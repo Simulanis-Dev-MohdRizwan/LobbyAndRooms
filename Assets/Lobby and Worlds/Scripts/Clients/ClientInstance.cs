@@ -2,6 +2,7 @@
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
+using FishNet.Transporting;
 using System.Collections;
 using UnityEngine;
 
@@ -40,6 +41,8 @@ namespace FirstGearGames.LobbyAndWorld.Clients
         /// </summary>
         private const int VERSION_CODE = 0;
         #endregion
+
+        public ClientConnectionStateArgs ConnectionStateArgs { get; private set; }
 
         private void Awake()
         {

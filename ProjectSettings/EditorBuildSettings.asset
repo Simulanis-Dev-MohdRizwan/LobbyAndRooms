@@ -5,12 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Lobby and Worlds/Scenes/Lobby.unity
     guid: eaf80ca26e3236d41bcf842ba7879712
-  - enabled: 1
+  - enabled: 0
     path: Assets/Lobby and Worlds/Demos/KingOfHill/Scenes/Game.unity
     guid: b924374779913864c8079a1aa3a1383c
+  - enabled: 1
+    path: Assets/ExternalCode/Scenes/Lobby.unity
+    guid: 3c9900bb03adce34c8ef579f3bff5f6f
+  - enabled: 1
+    path: Assets/ExternalCode/Scenes/Game.unity
+    guid: 897b4572523794d48aa2b002ad9c17bf
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 290a6e6411d135049940bec2237b8938, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
