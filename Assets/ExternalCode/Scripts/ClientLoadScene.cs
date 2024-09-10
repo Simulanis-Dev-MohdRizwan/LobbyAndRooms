@@ -1,17 +1,20 @@
+using FishNet;
 using FishNet.Object;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ClientLoadScene : NetworkBehaviour
 {
-    public LoadScene scene;
+    public LoadScene loadScene;
+    public int thisClientID;
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        thisClientID = InstanceFinder.NetworkManager.ClientManager.Connection.ClientId;
+    }
 
     [ContextMenu("Load the Scene")]
     public void RequestSceneLoad()
     {
-
-            scene.LoadSceneUsingRPC(base.Owner);
-        
+        loadScene.LoadScenForClient(thisClientID);
     }
 }

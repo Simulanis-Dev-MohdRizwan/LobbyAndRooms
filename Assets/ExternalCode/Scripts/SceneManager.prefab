@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4452498654158461338}
   - component: {fileID: 928954583064018206}
   - component: {fileID: 7942999517746310766}
+  - component: {fileID: 4610670579087942484}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -45,11 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08275912c4455546ac954cbf5b1e09a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 7942999517746310766}
-  _networkObjectCache: {fileID: 0}
-  connectionId: 0
-  clientStarted: 0
+  _networkObjectCache: {fileID: 7942999517746310766}
+  receivedClientId: 0
 --- !u!114 &7942999517746310766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +66,8 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  _networkBehaviours: []
+  _networkBehaviours:
+  - {fileID: 928954583064018206}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <SerializedNestedNetworkObjects>k__BackingField: []
   _isNetworked: 1
@@ -88,11 +89,28 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 7
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 12783093719466769097
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    LocalScale: {x: 0, y: 0, z: 0}
+    Position: {x: 338.5, y: 170, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+--- !u!114 &4610670579087942484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4149556816817203980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e26c37221fb48c45889094e81ba2181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 7942999517746310766}
+  _networkObjectCache: {fileID: 0}
+  loadScene: {fileID: 928954583064018206}
+  thisClientID: 0

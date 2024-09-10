@@ -441,49 +441,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!1 &756873333 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4149556816817203980, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
-  m_PrefabInstance: {fileID: 1080633227}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &756873334 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7942999517746310766, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
-  m_PrefabInstance: {fileID: 1080633227}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 756873333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &756873335 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 928954583064018206, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
-  m_PrefabInstance: {fileID: 1080633227}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 756873333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f08275912c4455546ac954cbf5b1e09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &756873337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 756873333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e26c37221fb48c45889094e81ba2181, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 756873334}
-  _networkObjectCache: {fileID: 0}
-  scene: {fileID: 756873335}
 --- !u!1 &966392938
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,10 +579,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4149556816817203980, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 756873337}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
 --- !u!1 &1147979893
 GameObject:

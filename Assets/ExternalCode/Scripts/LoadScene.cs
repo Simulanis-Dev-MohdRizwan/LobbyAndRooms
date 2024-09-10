@@ -3,49 +3,72 @@ using FishNet.Managing.Scened;
 using FishNet;
 using FishNet.Connection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEditor.SearchService;
 public class LoadScene : NetworkBehaviour
 {
-    public int connectionId;
-    public bool clientStarted;
 
-    public SceneLoadData sceneReference;
+    public SceneLoadData ServerSceneRef;
+    public SceneLoadData ClientSceneRef;
+    public SceneLoadData TempHolder;
 
-    public SceneLoadData sceneLoadDataOnServer;
+    public int receivedClientId;
+
+    public int thisClientId;
+
+    public bool serverStarted;
     public override void OnStartServer()
     {
         base.OnStartServer();
-       
-        LoadSceneOnServer(null);
+        //LoadSceneOnServer(InstanceFinder.NetworkManager.ClientManager.Connection.ClientId);
     }
 
     public override void OnStartClient()
     {
-       base.OnStartClient();
-       connectionId = InstanceFinder.ClientManager.Connection.ClientId;
+        base.OnStartClient();
+        thisClientId = InstanceFinder.NetworkManager.ClientManager.Connection.ClientId;
     }
-    public void LoadSceneOnServer(NetworkConnection conn)
+    [ServerRpc(RequireOwnership = false, RunLocally = true)]
+    public void LoadSceneOnServer(int conn)
     {
-        int i = 0;
+        if (!InstanceFinder.NetworkManager.ServerManager.Started) { Debug.Log("Server not started"); };
         SceneLoadData sld = new SceneLoadData("ExternalCode/Scenes/Game");
-        Debug.Log(i++);
         LoadOptions loadOptions = new LoadOptions
         {
             AllowStacking = true,
         };
-        Debug.Log(i++);
         sld.Options = loadOptions;
-        Debug.Log(i++);
-        InstanceFinder.SceneManager.LoadConnectionScenes(conn, sld);
-        Debug.Log(i++);
-        sceneReference = sld;
+        InstanceFinder.SceneManager.LoadConnectionScenes(GetConnFromID(conn),sld);
+        Debug.Log($"scene loading successfull for {receivedClientId} ");
+        //SendSceneLoadDataToServer(sld);
     }
 
     [ServerRpc(RequireOwnership =false,RunLocally =true)]
-    public void LoadSceneUsingRPC(NetworkConnection conn)
+    public void LoadScenForClient(int id)
     {
-        LoadSceneOnServer(conn);
+        receivedClientId = id;
+        LoadSceneOnServer(id);
+        Debug.Log($"received {id} for server");
     }
 
+    public  NetworkConnection GetConnFromID(int clientId)
+    {
+        if (InstanceFinder.NetworkManager.ServerManager.Clients.ContainsKey(clientId))
+        {
+            Debug.Log($"the id {clientId} exist in dictionary");
+            return InstanceFinder.NetworkManager.ServerManager.Clients[(int)clientId];
+        }
+        else
+        {
+            Debug.Log($"the id {clientId} does not exixt in dictionary");
+            return null;
+        }
+    }
+
+    [ContextMenu("load scene")]
+    public void LoadSceneFromClientSide()
+    {
+      LoadSceneOnServer(thisClientId);
+    }
 }
+
+
+
