@@ -1,25 +1,125 @@
+using FirstGearGames.LobbyAndWorld.Global.Canvases;
 using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayerM : NetworkBehaviour
 {
-    public bool connectedToServer;
+    
+    [SerializeField] GameObject ButtonContainer;
+    [SerializeField] TextMeshProUGUI RoomNumbr;
     public int thisClientId;
     public NetworkObject thisNetworkObject;
+    //public int RoomId;
+
+    public int MyRoomId;
+    public UnityEvent ifOwner;
+    public UnityEvent ifNotOwner;
+    [SerializeField] TextMeshProUGUI PlayerId;
+
+    [Header("Message Canvas")]
+    [SerializeField] TMP_InputField MessageBox;
+    [SerializeField] Button SendMessageTmp;
     private void Start()
     {
-        //connectedToServer = true;
-        //thisNetworkObject = this.gameObject.GetComponent<NetworkObject>();
-        //thisClientId = thisNetworkObject.ObjectId;
+    }
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+      
+        if(!base.IsOwner)
+        {
+            ButtonContainer.SetActive(false);
+            MessageBox.transform.parent.gameObject.SetActive(false);
+        }  
+    }
+    private void OnDisable()
+    {
+        SendMessageTmp.onClick.RemoveAllListeners();
     }
 
+    [ContextMenu("Play")]
+    public void loadClient(int RoomId)
+    {
+        if (base.IsOwner)
+        {
+            RoomNumbr.text = RoomId.ToString();
+            ButtonContainer.SetActive(false); 
+            thisClientId = InstanceFinder.NetworkManager.ClientManager.Connection.ClientId;
+            thisNetworkObject = this.GetComponent<NetworkObject>();
+            LoadScene.instance.LoadRoom(LocalConnection, thisNetworkObject, RoomId);
+            SendIDOnServer(thisClientId, RoomId);
+            ifOwner?.Invoke();
+        }
+
+        else if (!base.IsOwner)
+        {
+            ifNotOwner?.Invoke();
+        }
+    }
+    #region Player Id
+    [ServerRpc(RequireOwnership =false,RunLocally =true)]
+    public void SendIDOnServer(int playerID, int RoomId)
+    {
+        SetNameOnPlayer(playerID,RoomId);
+    }
+    [ObserversRpc(ExcludeOwner =false,BufferLast =true)]
+    public void SetNameOnPlayer(int playerId,int RoomId)
+    {
+        PlayerId.text = playerId.ToString();
+        MyRoomId = RoomId;
+    }
     private void OnDestroy()
     {
+        LoadScene.PlayerRemoved?.Invoke(LocalConnection);
+    }
+    #endregion
+
+    #region Message Send Receive RPC's
+    public void SendMessageFromPlayer()
+    {
+        string message = MessageBox.text;
+        int myId = thisClientId;
+        int roomId = MyRoomId;
+
+        SendMessageToServer(message, myId,roomId);
+        Debug.Log($" Send Message from {myId} and room {roomId} AND {this.MyRoomId} ");
     }
 
-    
+    [ServerRpc(RequireOwnership = false, RunLocally = true)]
+    public void SendMessageToServer(string message, int MyId, int RoomId)
+    {
+        SendMessageToEveryone(message, MyId, RoomId);
+        Debug.Log("MESSAGE RECEIVED ON SERVER : "+message);
+    }
+
+    [ObserversRpc(ExcludeOwner = false,BufferLast =true )]
+    public void SendMessageToEveryone(string message, int SenderId, int RoomID)
+    {
+        Debug.Log($"MESSAGE RECEIVED ON OBSERVER: {message} from: {SenderId} Room: {RoomID}");
+        //if (MyRoomId != RoomID)
+        //{
+        //    Debug.Log($"{MyRoomId} and {RoomID} are not same");
+        //    return;
+        //}
+        BroadCastMessage.ReceivedMessage?.Invoke(message);
+        Debug.Log("Success: " + message);
+
+    }
+
+    public void ReceiveMessage(string message, int SenderId, int RoomId)
+    {
+
+    }
+
+    #endregion
 
 }

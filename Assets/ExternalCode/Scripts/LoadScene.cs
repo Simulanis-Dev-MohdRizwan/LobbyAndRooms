@@ -3,71 +3,117 @@ using FishNet.Managing.Scened;
 using FishNet;
 using FishNet.Connection;
 using UnityEngine;
+using FirstGearGames.LobbyAndWorld.Global.Canvases;
+using System.Globalization;
+using System.Collections.Generic;
+using System;
+using UnityEngine.SceneManagement;
+using FishNet.Object.Synchronizing;
+using FishNet.CodeGenerating;
 public class LoadScene : NetworkBehaviour
 {
+    public static LoadScene instance;
+    public List<Scene> SceneLoaded = new List<Scene>();
+ 
+    [AllowMutableSyncType] public SyncDictionary<int, SceneLoadData> SceneData = new();
+    [AllowMutableSyncType] public SyncDictionary<int, ClientInformations> clientinfo = new();
 
-    public SceneLoadData ServerSceneRef;
-    public SceneLoadData ClientSceneRef;
-    public SceneLoadData TempHolder;
+    public static Action<ClientInformations> PlayerSpawned;
+    public static Action<NetworkConnection> PlayerRemoved;
 
-    public int receivedClientId;
 
-    public int thisClientId;
-
-    public bool serverStarted;
-    public override void OnStartServer()
+    private void Awake()
     {
-        base.OnStartServer();
-        //LoadSceneOnServer(InstanceFinder.NetworkManager.ClientManager.Connection.ClientId);
+        instance = this;
     }
 
-    public override void OnStartClient()
+
+    private void Start()
     {
-        base.OnStartClient();
-        thisClientId = InstanceFinder.NetworkManager.ClientManager.Connection.ClientId;
+        InstanceFinder.SceneManager.OnLoadEnd += RegisterScene;
+        PlayerSpawned += PlayerAddedToList;
+        PlayerRemoved += PlayerRemovedFromList;
     }
-    [ServerRpc(RequireOwnership = false, RunLocally = true)]
-    public void LoadSceneOnServer(int conn)
+
+    private void OnDisable()
     {
-        if (!InstanceFinder.NetworkManager.ServerManager.Started) { Debug.Log("Server not started"); };
-        SceneLoadData sld = new SceneLoadData("ExternalCode/Scenes/Game");
-        LoadOptions loadOptions = new LoadOptions
+        InstanceFinder.SceneManager.OnLoadEnd -= RegisterScene;
+        PlayerSpawned -= PlayerAddedToList;
+        PlayerRemoved -= PlayerRemovedFromList;
+    }
+    private void PlayerRemovedFromList(NetworkConnection informations)
+    {
+        if (clientinfo.ContainsKey(informations.ClientId))
         {
-            AllowStacking = true,
-        };
-        sld.Options = loadOptions;
-        InstanceFinder.SceneManager.LoadConnectionScenes(GetConnFromID(conn),sld);
-        Debug.Log($"scene loading successfull for {receivedClientId} ");
-        //SendSceneLoadDataToServer(sld);
-    }
-
-    [ServerRpc(RequireOwnership =false,RunLocally =true)]
-    public void LoadScenForClient(int id)
-    {
-        receivedClientId = id;
-        LoadSceneOnServer(id);
-        Debug.Log($"received {id} for server");
-    }
-
-    public  NetworkConnection GetConnFromID(int clientId)
-    {
-        if (InstanceFinder.NetworkManager.ServerManager.Clients.ContainsKey(clientId))
-        {
-            Debug.Log($"the id {clientId} exist in dictionary");
-            return InstanceFinder.NetworkManager.ServerManager.Clients[(int)clientId];
+            clientinfo.Remove(informations.ClientId);
+            Debug.Log($"player {informations.ClientId} removed");
         }
+    }
+
+    private void PlayerAddedToList(ClientInformations informations)
+    {
+        clientinfo.Add(informations._playerId, informations);
+        Debug.Log($"Player {informations._playerId} added in room {informations._roomId}" );
+    }
+
+    private void RegisterScene(SceneLoadEndEventArgs args)
+    {
+        if (!base.IsServerInitialized) return;
+        foreach(var scene in args.LoadedScenes)
+        {
+            SceneLoaded.Add(scene);
+        }
+    }
+
+    public void LoadRoom(NetworkConnection connection,NetworkObject player,int roomId)
+    {
+        LoadSceneOnServer(connection, player,roomId);
+    }
+    SceneLoadData sld;
+    [ServerRpc(RequireOwnership = false,RunLocally = false)]
+    public void LoadSceneOnServer(NetworkConnection conn,NetworkObject player,int RoomId)
+    {
+        if (!SceneData.ContainsKey(RoomId))
+        {
+            SceneLookupData sceneLookupData = new SceneLookupData("ExternalCode/Scenes/Game");
+            sld = new SceneLoadData(sceneLookupData);
+            sld.Options.AllowStacking = true;
+            sld.MovedNetworkObjects = new[] { player };
+            InstanceFinder.SceneManager.LoadConnectionScenes(conn, sld);
+            Debug.Log("new room" + RoomId);
+            SceneData.Add(RoomId,sld);
+
+        }
+
         else
         {
-            Debug.Log($"the id {clientId} does not exixt in dictionary");
-            return null;
+            sld = SceneData[RoomId];
+            sld.Options.AllowStacking = false;
+            sld.MovedNetworkObjects = new[] { player };
+            InstanceFinder.SceneManager.LoadConnectionScenes(conn, sld);
+            Debug.Log("old room" + RoomId);
         }
+        PlayerAddedToList(new ClientInformations(conn, conn.ClientId, RoomId));
+        Debug.Log($"scene loading successfull for {conn.ClientId} ");
     }
 
-    [ContextMenu("load scene")]
-    public void LoadSceneFromClientSide()
+}
+
+[System.Serializable]
+public class ClientInformations
+{
+    public NetworkConnection Connection;
+    public int _playerId;
+    public int _roomId;
+
+    public ClientInformations() { }
+    public ClientInformations(NetworkConnection conn, int playerId , int roomId )
     {
-      LoadSceneOnServer(thisClientId);
+        Connection = conn;
+        _playerId = playerId;
+        _roomId = roomId;
     }
+    
 }
 
 
