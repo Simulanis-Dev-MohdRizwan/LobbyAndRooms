@@ -845,6 +845,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4149556816817203980, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4452498654158461338, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 338.5
@@ -888,6 +892,10 @@ PrefabInstance:
     - target: {fileID: 7942999517746310766, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
       propertyPath: <SceneId>k__BackingField
       value: 3066018597
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942999517746310766, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
+      propertyPath: _networkBehaviours.Array.data[1]
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4610670579087942484, guid: a396dd637f1d3c64c8c0f4663cb4f9b9, type: 3}
@@ -1307,6 +1315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Text: 
+  roomNumber: 0
 --- !u!1 &1981748919
 GameObject:
   m_ObjectHideFlags: 0

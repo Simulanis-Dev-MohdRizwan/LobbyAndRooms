@@ -1,5 +1,6 @@
 using FishNet;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,25 +9,23 @@ using UnityEngine;
 
 public class PlayerListAndPrivateChat : NetworkBehaviour
 {
-    [SerializeField] private Transform container;
-    public GameObject Button;
     public List<int> playerlist;
+    public int thisRoomId;
 
-    public static Action<int> addPlayerToList;
-    private void OnEnable()
+    public void SetRoomId(int roomId)
     {
-        //PlayerM.OnPlayerJoined += PlayerJoined;
-    }
-    public void PlayerJoined(int id)
-    {
-        if (!playerlist.Contains(id))
-        {
-            playerlist.Add(id);
-        }
+        SetRoomIdOnObserver(roomId);
     }
 
-    private void OnDisable()
+    [ServerRpc(RequireOwnership =false,RunLocally =true)]
+    public void SetRoomIDOnServer(int roomId)
     {
-        //PlayerM.OnPlayerJoined -= PlayerJoined;
+        SetRoomIdOnObserver(roomId);
+    }
+
+    [ObserversRpc(ExcludeOwner =false,BufferLast =true)]
+    public void SetRoomIdOnObserver(int roomID)
+    {
+        thisRoomId = roomID;
     }
 }

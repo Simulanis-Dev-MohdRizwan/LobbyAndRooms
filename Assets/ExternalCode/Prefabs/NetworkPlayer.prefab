@@ -451,7 +451,6 @@ GameObject:
   - component: {fileID: 7324793314812429596}
   - component: {fileID: 3350018588706444449}
   - component: {fileID: 432864967287345494}
-  - component: {fileID: 13792749713097299}
   m_Layer: 8
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -1200,6 +1199,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7276165685633183231}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   PlayerId: {fileID: 5191456583057577022}
   MessageBox: {fileID: 7023038133445296482}
   SendMessageTmp: {fileID: 3010188283623117492}
@@ -1269,21 +1280,6 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
---- !u!114 &13792749713097299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175395014354209586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7979cbbb306eabb4796e84771a243eef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  container: {fileID: 6299379842581436809}
-  Button: {fileID: 7794519581030816348, guid: 7b62fac1d8a00dc458887df80390ad39, type: 3}
-  playerlist: 
 --- !u!1 &1176366478130523215
 GameObject:
   m_ObjectHideFlags: 0
@@ -8781,13 +8777,15 @@ GameObject:
   - component: {fileID: 8416791558018075296}
   - component: {fileID: 7812165809084417894}
   - component: {fileID: 3440307850706389790}
+  - component: {fileID: 8432828080624685659}
+  - component: {fileID: 6879965927604383666}
   m_Layer: 5
   m_Name: PlayerListCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3518720218254846568
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8871,6 +8869,37 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8432828080624685659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276165685633183231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7979cbbb306eabb4796e84771a243eef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 7399477952387667731}
+  _networkObjectCache: {fileID: 0}
+  container: {fileID: 6299379842581436809}
+  Button: {fileID: 7794519581030816348, guid: 7b62fac1d8a00dc458887df80390ad39, type: 3}
+  playerlist: 
+  thisRoomId: 0
+--- !u!225 &6879965927604383666
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276165685633183231}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7361935309868058001
 GameObject:
   m_ObjectHideFlags: 0

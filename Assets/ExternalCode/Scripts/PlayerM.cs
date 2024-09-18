@@ -40,8 +40,8 @@ public class PlayerM : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-      
-        if(!base.IsOwner)
+        //PlayerListAndPrivateChat.addPlayerToList.Invoke(InstanceFinder.NetworkManager.ClientManager.Connection.ClientId);
+        if (!base.IsOwner)
         {
             ButtonContainer.SetActive(false);
             MessageBox.transform.parent.gameObject.SetActive(false);
@@ -65,7 +65,6 @@ public class PlayerM : NetworkBehaviour
             LoadScene.instance.LoadRoom(LocalConnection, thisNetworkObject, RoomId);
             SendIDOnServer(thisClientId, RoomId);
             ChatFuntionality.GetRoomNumber(RoomId);
-
             ifOwner?.Invoke();
         }
 
@@ -73,6 +72,9 @@ public class PlayerM : NetworkBehaviour
         {
             ifNotOwner?.Invoke();
         }
+
+        //PlayerListAndPrivateChat.addPlayerToList.Invoke(RoomId);
+
     }
     #region Player Id
     [ServerRpc(RequireOwnership =false,RunLocally =true)]
@@ -85,6 +87,7 @@ public class PlayerM : NetworkBehaviour
     {
         PlayerId.text = playerId.ToString();
         MyRoomId = RoomId;
+        //this.GetComponentInChildren<PlayerListAndPrivateChat>().thisRoomId = RoomId;
     }
     private void OnDestroy()
     {
