@@ -5,6 +5,7 @@ using FishNet.Object;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -28,6 +29,11 @@ public class PlayerM : NetworkBehaviour
     [Header("Message Canvas")]
     [SerializeField] TMP_InputField MessageBox;
     [SerializeField] Button SendMessageTmp;
+
+    public int SelectedPlayer;
+
+    public static Action OnPlayerJoined;
+    //public static Action<int> OnPlayerLeft;
     private void Start()
     {
     }
@@ -44,6 +50,7 @@ public class PlayerM : NetworkBehaviour
     private void OnDisable()
     {
         SendMessageTmp.onClick.RemoveAllListeners();
+        //OnPlayerLeft?.Invoke();
     }
 
     [ContextMenu("Play")]
@@ -57,6 +64,8 @@ public class PlayerM : NetworkBehaviour
             thisNetworkObject = this.GetComponent<NetworkObject>();
             LoadScene.instance.LoadRoom(LocalConnection, thisNetworkObject, RoomId);
             SendIDOnServer(thisClientId, RoomId);
+            ChatFuntionality.GetRoomNumber(RoomId);
+
             ifOwner?.Invoke();
         }
 
@@ -90,35 +99,41 @@ public class PlayerM : NetworkBehaviour
         int myId = thisClientId;
         int roomId = MyRoomId;
 
-        SendMessageToServer(message, myId,roomId);
+        SendMessageToServer(message, myId,roomId,null);
         Debug.Log($" Send Message from {myId} and room {roomId} AND {this.MyRoomId} ");
     }
 
     [ServerRpc(RequireOwnership = false, RunLocally = true)]
-    public void SendMessageToServer(string message, int MyId, int RoomId)
+    public void SendMessageToServer(string message, int MyId, int RoomId,NetworkConnection conn)
     {
-        SendMessageToEveryone(message, MyId, RoomId);
-        Debug.Log("MESSAGE RECEIVED ON SERVER : "+message);
+        if (conn == null)
+        {
+            SendMessageToEveryone(message, MyId, RoomId);
+            Debug.Log("MESSAGE RECEIVED ON SERVER : " + message);
+        }
+
+        else
+        {
+            //SendMessageToTarget
+        }
     }
 
     [ObserversRpc(ExcludeOwner = false,BufferLast =true )]
     public void SendMessageToEveryone(string message, int SenderId, int RoomID)
     {
         Debug.Log($"MESSAGE RECEIVED ON OBSERVER: {message} from: {SenderId} Room: {RoomID}");
-        //if (MyRoomId != RoomID)
-        //{
-        //    Debug.Log($"{MyRoomId} and {RoomID} are not same");
-        //    return;
-        //}
-        BroadCastMessage.ReceivedMessage?.Invoke(message);
+        string messge = $"{SenderId} : {message}";
+        BroadCastMessage.ReceivedMessage?.Invoke(messge);
         Debug.Log("Success: " + message);
 
     }
 
-    public void ReceiveMessage(string message, int SenderId, int RoomId)
+    [TargetRpc]
+    public void SendMessageToTarget(NetworkConnection conn)
     {
 
     }
+
 
     #endregion
 

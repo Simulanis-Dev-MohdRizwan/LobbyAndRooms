@@ -5,7 +5,9 @@ using UnityEngine;
 public class BroadCastMessage : MonoBehaviour
 {
     public static Action<string> ReceivedMessage;
-    public TextMeshProUGUI TextMeshProUGUI;
+
+    public Transform MessageContainer;
+    public GameObject MessageContainerPrefab;
     private void Start()
     {
         ReceivedMessage += messageReceive;
@@ -13,7 +15,8 @@ public class BroadCastMessage : MonoBehaviour
 
     public void messageReceive(string obj)
     {
-        TextMeshProUGUI.text = obj;
+        var textbox = Instantiate(MessageContainerPrefab,MessageContainer);
+        textbox.GetComponentInChildren<TextMeshProUGUI>().text = obj;
     }
 
     private void OnDisable()
