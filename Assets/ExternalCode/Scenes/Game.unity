@@ -132,8 +132,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2005575750}
-  - component: {fileID: 2005575752}
   - component: {fileID: 2005575751}
+  - component: {fileID: 2005575752}
   m_Layer: 0
   m_Name: PlayerList
   m_TagString: Untagged
@@ -211,14 +211,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2005575749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7979cbbb306eabb4796e84771a243eef, type: 3}
+  m_Script: {fileID: 11500000, guid: d3c0d6e33e824414e9781b93a7fe2928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 2005575751}
   _networkObjectCache: {fileID: 0}
-  container: {fileID: 0}
-  Button: {fileID: 0}
   playerlist: 
   thisRoomId: 0
 --- !u!1660057539 &9223372036854775807

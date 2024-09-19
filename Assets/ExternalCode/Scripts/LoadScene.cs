@@ -68,13 +68,14 @@ public class LoadScene : NetworkBehaviour
             {
                 if(room.name == "PlayerList")
                 {
-                   var  _playerListAndPrivateChat = room.GetComponent<PlayerListAndPrivateChat>();
+                   var  _playerListAndPrivateChat = room.GetComponent<RoomInfo>();
                    _playerListAndPrivateChat.thisRoomId = CreatedRoomId;
                    _playerListAndPrivateChat.SetRoomId(CreatedRoomId);
+                    //RoomInfo.addToPlayerList?.Invoke(LocalConnection.ClientId, CreatedRoomId);
                 }
             }
             Debug.Log("find the GameObject");
-            //roomData.GetComponent<PlayerListAndPrivateChat>().thisRoomId = CreatedRoomId;
+            //roomData.GetComponent<RoomInfo>().thisRoomId = CreatedRoomId;
         }
     }
     private int CreatedRoomId;
@@ -96,7 +97,7 @@ public class LoadScene : NetworkBehaviour
             Debug.Log("new room" + RoomId);
             SceneData.Add(RoomId,sld);
             CreatedRoomId = RoomId;
-            //PlayerListAndPrivateChat.SetThisRoomNumber?.Invoke(RoomId);
+            //RoomInfo.SetThisRoomNumber?.Invoke(RoomId);
         }
 
         else
@@ -109,6 +110,7 @@ public class LoadScene : NetworkBehaviour
         }
         PlayerAddedToList(new ClientInformations(conn, conn.ClientId, RoomId));
         Debug.Log($"scene loading successfull for {conn.ClientId} ");
+        //RoomInfo.addToPlayerList?.Invoke(conn.ClientId, RoomId);
     }
 
 }

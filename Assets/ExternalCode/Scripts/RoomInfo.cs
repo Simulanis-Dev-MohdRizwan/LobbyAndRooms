@@ -7,10 +7,25 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PlayerListAndPrivateChat : NetworkBehaviour
+public class RoomInfo : NetworkBehaviour
 {
     public List<int> playerlist;
     public int thisRoomId;
+
+   // <summary> addToPlayer<playerId,RoomID> </summary>
+    public static Action<int,int> addToPlayerList ;
+
+    private void OnEnable()
+    {
+        addToPlayerList += AddToList;
+    }
+
+    private void AddToList(int playerID,int roomNumber)
+    {
+        if (roomNumber != thisRoomId) return;
+        if (playerlist.Contains(playerID)) return;
+        playerlist.Add(playerID);
+    }
 
     public void SetRoomId(int roomId)
     {
